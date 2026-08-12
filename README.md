@@ -1,4 +1,42 @@
-# Velt Database - Module PDO Complet
+# Velt Database
+
+Velt Database est la couche de données PDO du framework Velt. Le package centralise les connexions, fournit un query builder avec paramètres liés, un schema builder multi-driver, un runner de migrations, des seeders, des factories et un cache optionnel.
+
+> Statut : préversion. Les fondations SQLite sont couvertes ; une version stable exige une matrice réelle SQLite/MySQL/PostgreSQL, des transactions documentées et une politique de compatibilité complète.
+
+## Installation rapide
+
+```bash
+composer require velt/database
+```
+
+Prérequis : `ext-pdo` et le pilote correspondant (`pdo_sqlite`, `pdo_mysql` ou `pdo_pgsql`).
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+```php
+use Velt\Database\DB;
+
+$projects = DB::table('projects')
+    ->where('active', 1)
+    ->orderBy('created_at', 'desc')
+    ->get();
+```
+
+## Contrat de sécurité et validation
+
+Les valeurs utilisateur ne sont jamais concaténées au SQL. Les identifiants dynamiques passent par `SqlIdentifier`, puisque PDO ne peut pas lier un nom de table ou colonne. Les erreurs publiques ne doivent révéler ni DSN, ni secret, ni requête sensible. Le cache ne doit pas mélanger tenants ou données privées.
+
+```bash
+composer install
+composer validate --strict
+composer test
+```
+
+Un pilote absent peut provoquer un skip local, mais ne prouve aucune compatibilité. La CI de release doit exécuter chaque scénario sur les trois moteurs réels. L’architecture complémentaire est décrite dans [`docs/database-architecture.md`](docs/database-architecture.md).
 
 ## Mise a jour Module 3 Data ORM
 
